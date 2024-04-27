@@ -5,10 +5,13 @@ x-default-logging: &logging
     max-size: 5m
 
 services:
-  buf-build:
+  postgres:
     # command: []
     # depends_on: []
-    # environment: []
+    environment:
+      POSTGRES_DB: gorm
+      POSTGRES_PASSWORD: gorm
+      POSTGRES_USER: gorm
     # expose: []
     extra_hosts:
       - host.docker.internal:host-gateway
@@ -18,8 +21,37 @@ services:
       namespace: postgres
     logging: *logging
     # platform: linux/amd64
-    # ports: []
+    ports:
+      - "5432:5432"
     # restart: "no"
     # volumes:
     # working_dir:
 
+  postgress-migrate-cmd:
+    # command: []
+    container_name: postgress-migrate-cmd
+    depends_on:
+      postgress-migrate:
+        condition: service_completed_successfully
+    entrypoint:
+      - /bin/sh
+      - -c
+      - -Eefuvx
+      - >-
+        ./postgress-migrate.sh postgress
+    # environment: []
+    # expose: []
+    extra_hosts:
+      - host.docker.internal:host-gateway
+    # healthcheck: {}
+    image: migrate/migrate:v4.17.1
+    labels:
+      namespace: postgress-migrate-cmd
+    logging: *logging
+    # platform: linux/amd64
+    # ports: []
+    restart: "no"
+    volumes:
+      - ./db/server/:/db/server/:ro
+      - ./script/postgress-migrate.sh:/postgress-migrate.sh:ro
+    # working_dir: ""
