@@ -14,4 +14,5 @@ INSERT INTO Trade VALUES
 (407 ,307 ,2007 ,1007 ,'2021-01-01' ,1 ,7);
 
 -- QUERY
--- SELECT 'Instrument'.'Name', 'Trade'.* FROM Instrument INNER JOIN Trade ON Instrument.Id = Trade.InstrumentId
+-- SELECT 'Instrument'.'Name', 'Trade'.'DateEn', 'Trade'.'Open', 'Trade'.'High', 'Trade'.'Low', 'Trade'.'Close' FROM Instrument INNER JOIN Trade ON 'Instrument'.'Id' = 'Trade'.'InstrumentId'
+-- این کویری یک مشکل دارد با توجه به اینکه رابطه بین این دو ماهیت موجود نمی باشد درست نیست

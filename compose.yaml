@@ -7,12 +7,12 @@ x-default-logging: &logging
 services:
   postgres:
     # command: []
+    container_name: postgres
     # depends_on: []
     environment:
       POSTGRES_DB: gorm
       POSTGRES_PASSWORD: gorm
       POSTGRES_USER: gorm
-    # expose: []
     extra_hosts:
       - host.docker.internal:host-gateway
     # healthcheck: {}
@@ -23,9 +23,31 @@ services:
     # platform: linux/amd64
     ports:
       - "5432:5432"
-    # restart: "no"
-    # volumes:
-    # working_dir:
+    restart: "no"
+
+  postgress-migrate:
+    command:
+      - sql
+      - --file=/init_schema.up.sql
+      - --host=postgres:5432
+      - --insecure
+    container_name: postgress-migrate
+    depends_on:
+      postgress:
+        condition: service_healthy
+    # environment: []
+    extra_hosts:
+      - host.docker.internal:host-gateway
+    # healthcheck: {}
+    image: postgres:16.2
+    labels:
+      namespace: postgress-migrate
+    logging: *logging
+    # platform: linux/amd64
+    # ports: []
+    restart: "no"
+    volumes:
+      - ./db/init_schema.up.sql:/init_schema.up.sql:ro
 
   postgress-migrate-cmd:
     # command: []
@@ -39,8 +61,7 @@ services:
       - -Eefuvx
       - >-
         ./postgress-migrate.sh postgress
-    # environment: []
-    # expose: []
+    environment: []
     extra_hosts:
       - host.docker.internal:host-gateway
     # healthcheck: {}
@@ -54,4 +75,3 @@ services:
     volumes:
       - ./db/server/:/db/server/:ro
       - ./script/postgress-migrate.sh:/postgress-migrate.sh:ro
-    # working_dir: ""

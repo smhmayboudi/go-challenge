@@ -1,4 +1,4 @@
-package main
+package model
 
 import "time"
 
@@ -9,8 +9,8 @@ type Instrument struct {
 
 type Trade struct {
 	Id           int
-	InstrumentId time.Time
-	DateEn       int
+	InstrumentId int
+	DateEn       time.Time
 	Open         int
 	High         int
 	Low          int
