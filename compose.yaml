@@ -1,0 +1,25 @@
+x-default-logging: &logging
+  driver: json-file
+  options:
+    max-file: 2
+    max-size: 5m
+
+services:
+  buf-build:
+    # command: []
+    # depends_on: []
+    # environment: []
+    # expose: []
+    extra_hosts:
+      - host.docker.internal:host-gateway
+    # healthcheck: {}
+    image: postgres:latest
+    labels:
+      namespace: postgres
+    logging: *logging
+    # platform: linux/amd64
+    # ports: []
+    # restart: "no"
+    # volumes:
+    # working_dir:
+
